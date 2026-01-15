@@ -1,0 +1,376 @@
+# RDF initialization script for Apache Jena Fuseki
+# E-commerce Platform using RDF/OWL vocabulary
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex: <http://example.org/ecommerce#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+
+# ========== DEFINE CLASSES ==========
+ex:User a owl:Class ;
+    rdfs:label "User" ;
+    rdfs:comment "A user in the e-commerce platform" .
+
+ex:Product a owl:Class ;
+    rdfs:label "Product" ;
+    rdfs:comment "A product sold in the platform" .
+
+ex:Order a owl:Class ;
+    rdfs:label "Order" ;
+    rdfs:comment "An order placed by a user" .
+
+ex:OrderItem a owl:Class ;
+    rdfs:label "OrderItem" ;
+    rdfs:comment "An item within an order" .
+
+ex:Review a owl:Class ;
+    rdfs:label "Review" ;
+    rdfs:comment "A product review" .
+
+ex:Category a owl:Class ;
+    rdfs:label "Category" ;
+    rdfs:comment "A product category" .
+
+ex:Payment a owl:Class ;
+    rdfs:label "Payment" ;
+    rdfs:comment "A payment transaction" .
+
+ex:CartItem a owl:Class ;
+    rdfs:label "CartItem" ;
+    rdfs:comment "An item in shopping cart" .
+
+# ========== DEFINE PROPERTIES ==========
+ex:hasEmail a owl:DatatypeProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range xsd:string .
+
+ex:hasAge a owl:DatatypeProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range xsd:integer .
+
+ex:hasCity a owl:DatatypeProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range xsd:string .
+
+ex:hasRole a owl:DatatypeProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range xsd:string .
+
+ex:hasPhone a owl:DatatypeProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range xsd:string .
+
+ex:hasSKU a owl:DatatypeProperty ;
+    rdfs:domain ex:Product ;
+    rdfs:range xsd:string .
+
+ex:hasPrice a owl:DatatypeProperty ;
+    rdfs:domain ex:Product ;
+    rdfs:range xsd:decimal .
+
+ex:hasStock a owl:DatatypeProperty ;
+    rdfs:domain ex:Product ;
+    rdfs:range xsd:integer .
+
+ex:hasRating a owl:DatatypeProperty ;
+    rdfs:domain ex:Product ;
+    rdfs:range xsd:decimal .
+
+ex:hasTotalAmount a owl:DatatypeProperty ;
+    rdfs:domain ex:Order ;
+    rdfs:range xsd:decimal .
+
+ex:hasStatus a owl:DatatypeProperty ;
+    rdfs:domain ex:Order ;
+    rdfs:range xsd:string .
+
+ex:hasQuantity a owl:DatatypeProperty ;
+    rdfs:domain ex:OrderItem ;
+    rdfs:range xsd:integer .
+
+ex:hasReviewRating a owl:DatatypeProperty ;
+    rdfs:domain ex:Review ;
+    rdfs:range xsd:integer .
+
+ex:hasAmount a owl:DatatypeProperty ;
+    rdfs:domain ex:Payment ;
+    rdfs:range xsd:decimal .
+
+ex:hasMethod a owl:DatatypeProperty ;
+    rdfs:domain ex:Payment ;
+    rdfs:range xsd:string .
+
+ex:placedOrder a owl:ObjectProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range ex:Order ;
+    rdfs:label "placed order" .
+
+ex:containsItem a owl:ObjectProperty ;
+    rdfs:domain ex:Order ;
+    rdfs:range ex:OrderItem ;
+    rdfs:label "contains item" .
+
+ex:forProduct a owl:ObjectProperty ;
+    rdfs:domain ex:OrderItem ;
+    rdfs:range ex:Product ;
+    rdfs:label "for product" .
+
+ex:belongsToCategory a owl:ObjectProperty ;
+    rdfs:domain ex:Product ;
+    rdfs:range ex:Category ;
+    rdfs:label "belongs to category" .
+
+ex:wroteReview a owl:ObjectProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range ex:Review ;
+    rdfs:label "wrote review" .
+
+ex:reviewsProduct a owl:ObjectProperty ;
+    rdfs:domain ex:Review ;
+    rdfs:range ex:Product ;
+    rdfs:label "reviews product" .
+
+ex:hasPayment a owl:ObjectProperty ;
+    rdfs:domain ex:Order ;
+    rdfs:range ex:Payment ;
+    rdfs:label "has payment" .
+
+ex:madePayment a owl:ObjectProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range ex:Payment ;
+    rdfs:label "made payment" .
+
+ex:addedToCart a owl:ObjectProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range ex:Product ;
+    rdfs:label "added to cart" .
+
+ex:follows a owl:ObjectProperty ;
+    rdfs:domain ex:User ;
+    rdfs:range ex:User ;
+    rdfs:label "follows" .
+
+# ========== USERS ==========
+ex:user1 a ex:User ;
+    foaf:name "Alice Johnson" ;
+    ex:hasEmail "user1@example.com" ;
+    ex:hasAge 28 ;
+    ex:hasCity "Paris" ;
+    ex:hasRole "customer" ;
+    ex:hasPhone "+1-555-1000" .
+
+ex:user2 a ex:User ;
+    foaf:name "Bob Smith" ;
+    ex:hasEmail "user2@example.com" ;
+    ex:hasAge 32 ;
+    ex:hasCity "London" ;
+    ex:hasRole "admin" ;
+    ex:hasPhone "+1-555-1001" .
+
+ex:user3 a ex:User ;
+    foaf:name "Charlie Brown" ;
+    ex:hasEmail "user3@example.com" ;
+    ex:hasAge 25 ;
+    ex:hasCity "Berlin" ;
+    ex:hasRole "vendor" ;
+    ex:hasPhone "+1-555-1002" .
+
+ex:user4 a ex:User ;
+    foaf:name "Diana Prince" ;
+    ex:hasEmail "user4@example.com" ;
+    ex:hasAge 30 ;
+    ex:hasCity "New York" ;
+    ex:hasRole "customer" ;
+    ex:hasPhone "+1-555-1003" .
+
+ex:user5 a ex:User ;
+    foaf:name "Eve Wilson" ;
+    ex:hasEmail "user5@example.com" ;
+    ex:hasAge 27 ;
+    ex:hasCity "Tokyo" ;
+    ex:hasRole "customer" ;
+    ex:hasPhone "+1-555-1004" .
+
+# ========== PRODUCTS ==========
+ex:product1 a ex:Product ;
+    schema:name "Laptop Pro 15\"" ;
+    ex:hasSKU "SKU-10001" ;
+    ex:hasPrice 1299.99 ;
+    ex:hasStock 50 ;
+    ex:hasRating 4.5 .
+
+ex:product2 a ex:Product ;
+    schema:name "Wireless Mouse" ;
+    ex:hasSKU "SKU-10002" ;
+    ex:hasPrice 29.99 ;
+    ex:hasStock 100 ;
+    ex:hasRating 4.2 .
+
+ex:product3 a ex:Product ;
+    schema:name "Mechanical Keyboard" ;
+    ex:hasSKU "SKU-10003" ;
+    ex:hasPrice 149.99 ;
+    ex:hasStock 75 ;
+    ex:hasRating 4.7 .
+
+ex:product4 a ex:Product ;
+    schema:name "4K Monitor" ;
+    ex:hasSKU "SKU-10004" ;
+    ex:hasPrice 599.99 ;
+    ex:hasStock 40 ;
+    ex:hasRating 4.6 .
+
+ex:product5 a ex:Product ;
+    schema:name "USB-C Hub" ;
+    ex:hasSKU "SKU-10005" ;
+    ex:hasPrice 79.99 ;
+    ex:hasStock 90 ;
+    ex:hasRating 4.3 .
+
+ex:product6 a ex:Product ;
+    schema:name "Webcam HD" ;
+    ex:hasSKU "SKU-10006" ;
+    ex:hasPrice 99.99 ;
+    ex:hasStock 60 ;
+    ex:hasRating 4.4 .
+
+ex:product7 a ex:Product ;
+    schema:name "Noise Cancelling Headphones" ;
+    ex:hasSKU "SKU-10007" ;
+    ex:hasPrice 299.99 ;
+    ex:hasStock 45 ;
+    ex:hasRating 4.8 .
+
+ex:product8 a ex:Product ;
+    schema:name "SSD 1TB" ;
+    ex:hasSKU "SKU-10008" ;
+    ex:hasPrice 199.99 ;
+    ex:hasStock 80 ;
+    ex:hasRating 4.5 .
+
+ex:product9 a ex:Product ;
+    schema:name "RAM 16GB" ;
+    ex:hasSKU "SKU-10009" ;
+    ex:hasPrice 129.99 ;
+    ex:hasStock 70 ;
+    ex:hasRating 4.6 .
+
+ex:product10 a ex:Product ;
+    schema:name "Graphics Card RTX 4080" ;
+    ex:hasSKU "SKU-10010" ;
+    ex:hasPrice 1199.99 ;
+    ex:hasStock 25 ;
+    ex:hasRating 4.9 .
+
+# ========== CATEGORIES ==========
+ex:category1 a ex:Category ;
+    rdfs:label "Electronics" .
+
+ex:category2 a ex:Category ;
+    rdfs:label "Computers" .
+
+ex:category3 a ex:Category ;
+    rdfs:label "Accessories" .
+
+# ========== ORDERS ==========
+ex:order1 a ex:Order ;
+    schema:identifier "ORD-100001" ;
+    ex:hasTotalAmount 1299.99 ;
+    ex:hasStatus "delivered" .
+
+ex:order2 a ex:Order ;
+    schema:identifier "ORD-100002" ;
+    ex:hasTotalAmount 179.98 ;
+    ex:hasStatus "shipped" .
+
+ex:order3 a ex:Order ;
+    schema:identifier "ORD-100003" ;
+    ex:hasTotalAmount 749.98 ;
+    ex:hasStatus "processing" .
+
+# ========== ORDER ITEMS ==========
+ex:item1 a ex:OrderItem ;
+    ex:hasQuantity 1 ;
+    ex:forProduct ex:product1 .
+
+ex:item2 a ex:OrderItem ;
+    ex:hasQuantity 2 ;
+    ex:forProduct ex:product2 .
+
+ex:item3 a ex:OrderItem ;
+    ex:hasQuantity 1 ;
+    ex:forProduct ex:product3 .
+
+# ========== REVIEWS ==========
+ex:review1 a ex:Review ;
+    ex:hasReviewRating 5 ;
+    schema:headline "Great laptop" ;
+    schema:reviewBody "Excellent product!" .
+
+ex:review2 a ex:Review ;
+    ex:hasReviewRating 4 ;
+    schema:headline "Good mouse" ;
+    schema:reviewBody "Works well" .
+
+ex:review3 a ex:Review ;
+    ex:hasReviewRating 5 ;
+    schema:headline "Amazing keyboard" ;
+    schema:reviewBody "Best keyboard ever!" .
+
+# ========== PAYMENTS ==========
+ex:payment1 a ex:Payment ;
+    schema:identifier "TXN-1000001" ;
+    ex:hasAmount 1299.99 ;
+    ex:hasMethod "credit_card" .
+
+ex:payment2 a ex:Payment ;
+    schema:identifier "TXN-1000002" ;
+    ex:hasAmount 179.98 ;
+    ex:hasMethod "paypal" .
+
+# ========== RELATIONSHIPS ==========
+ex:user1 ex:placedOrder ex:order1 .
+ex:user2 ex:placedOrder ex:order2 .
+ex:user3 ex:placedOrder ex:order3 .
+
+ex:order1 ex:containsItem ex:item1 .
+ex:order2 ex:containsItem ex:item2 .
+ex:order2 ex:containsItem ex:item3 .
+
+ex:product1 ex:belongsToCategory ex:category2 .
+ex:product2 ex:belongsToCategory ex:category3 .
+ex:product3 ex:belongsToCategory ex:category3 .
+ex:product4 ex:belongsToCategory ex:category1 .
+ex:product5 ex:belongsToCategory ex:category3 .
+ex:product6 ex:belongsToCategory ex:category1 .
+ex:product7 ex:belongsToCategory ex:category1 .
+ex:product8 ex:belongsToCategory ex:category2 .
+ex:product9 ex:belongsToCategory ex:category2 .
+ex:product10 ex:belongsToCategory ex:category2 .
+
+ex:user1 ex:wroteReview ex:review1 .
+ex:review1 ex:reviewsProduct ex:product1 .
+ex:user2 ex:wroteReview ex:review2 .
+ex:review2 ex:reviewsProduct ex:product2 .
+ex:user3 ex:wroteReview ex:review3 .
+ex:review3 ex:reviewsProduct ex:product3 .
+
+ex:order1 ex:hasPayment ex:payment1 .
+ex:order2 ex:hasPayment ex:payment2 .
+
+ex:user1 ex:madePayment ex:payment1 .
+ex:user2 ex:madePayment ex:payment2 .
+
+ex:user1 ex:addedToCart ex:product2 .
+ex:user1 ex:addedToCart ex:product5 .
+ex:user2 ex:addedToCart ex:product3 .
+
+ex:user1 ex:follows ex:user2 .
+ex:user1 ex:follows ex:user3 .
+ex:user2 ex:follows ex:user1 .
+ex:user2 ex:follows ex:user4 .
+ex:user3 ex:follows ex:user1 .
+

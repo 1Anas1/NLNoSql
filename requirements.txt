@@ -1,0 +1,17 @@
+# Python dependencies for testing and connecting to databases
+
+# Redis
+redis>=5.0.0
+
+# MongoDB
+pymongo>=4.6.0
+
+# Cassandra
+cassandra-driver>=3.28.0
+
+# Neo4j
+neo4j>=5.14.0
+
+# Apache Jena Fuseki (SPARQL)
+SPARQLWrapper>=2.0.0
+

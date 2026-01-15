@@ -1,0 +1,30 @@
+# Fuseki server configuration
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+
+[] rdf:type fuseki:Server ;
+   fuseki:services (
+     <#service_tdb_readwrite>
+   ) .
+
+[] ja:loadClass "org.apache.jena.fuseki.Fuseki" .
+
+<#service_tdb_readwrite> rdf:type fuseki:Service ;
+    fuseki:name                        "llm_nosql_dataset" ;      # http://host:port/ds
+    fuseki:serviceQuery               "sparql" ;    # SPARQL query service
+    fuseki:serviceQuery               "query" ;     # SPARQL query service (alt name)
+    fuseki:serviceUpdate              "update" ;    # SPARQL update service
+    fuseki:serviceUpload              "upload" ;    # Non-SPARQL upload service
+    fuseki:serviceReadWriteGraphStore "data" ;      # SPARQL Graph store protocol (read and write)
+    fuseki:serviceReadGraphStore      "get" ;       # SPARQL Graph store protocol (read only)
+    fuseki:dataset                   <#dataset> ;
+    .
+
+<#dataset> rdf:type      tdb:DatasetTDB ;
+    tdb:location "DB" ;
+    tdb:unionDefaultGraph true ;
+    .
+

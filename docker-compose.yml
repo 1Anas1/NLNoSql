@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  # Key-Value Store: Redis
+  redis:
+    image: redis:7-alpine
+    container_name: redis-nosql
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./databases/init/redis-init.sh:/tmp/init.sh
+    command: redis-server --appendonly yes
+    networks:
+      - nosql-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Document Store: MongoDB
+  mongodb:
+    image: mongo:7
+    container_name: mongodb-nosql
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: llm_nosql_db
+    volumes:
+      - mongodb-data:/data/db
+      - ./databases/init/mongodb-init.js:/docker-entrypoint-initdb.d/init.js
+    networks:
+      - nosql-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Wide-Column Store: Apache Cassandra
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra-nosql
+    ports:
+      - "9042:9042"
+      - "7000:7000"
+      - "7001:7001"
+    environment:
+      CASSANDRA_CLUSTER_NAME: LLM_NoSQL_Cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack1
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 100M
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - ./databases/init/cassandra-init.cql:/init.cql
+    networks:
+      - nosql-network
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status | grep -E '^UN'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Graph Database: Neo4j
+  neo4j:
+    image: neo4j:5-community
+    container_name: neo4j-nosql
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    environment:
+      NEO4J_AUTH: neo4j/neo4j123
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+      NEO4J_dbms_memory_heap_initial__size: 512m
+      NEO4J_dbms_memory_heap_max__size: 512m
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+      - neo4j-import:/var/lib/neo4j/import
+      - neo4j-plugins:/plugins
+      - ./databases/init/neo4j-init.cypher:/init.cypher
+    networks:
+      - nosql-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # RDF Store: Apache Jena Fuseki
+  fuseki:
+    image: stain/jena-fuseki:latest
+    container_name: fuseki-nosql
+    ports:
+      - "3030:3030"
+    environment:
+      ADMIN_PASSWORD: admin123
+      FUSEKI_DATASET: llm_nosql_dataset
+    volumes:
+      - fuseki-data:/fuseki
+      - ./databases/init/fuseki-init.ttl:/fuseki/init-data.ttl
+      - ./databases/config/fuseki-config.ttl:/fuseki/config.ttl
+    networks:
+      - nosql-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3030/$/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  nosql-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  mongodb-data:
+  cassandra-data:
+  neo4j-data:
+  neo4j-logs:
+  neo4j-import:
+  neo4j-plugins:
+  fuseki-data:
+
